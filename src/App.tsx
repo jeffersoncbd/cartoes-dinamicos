@@ -19,7 +19,7 @@ const App: React.FC = () => {
       {imageUrl === undefined ? (
         <Selector handleLoadFile={setImageUrl} />
       ) : (
-        <Editor imageURL={imageUrl} />
+        <Editor imageUrl={imageUrl} />
       )}
     </Container>
   )

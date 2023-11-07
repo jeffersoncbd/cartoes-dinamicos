@@ -1,19 +1,13 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { ReactComponent as SquareAndCompassesIcon } from './assets/square-and-compasses.svg'
+import { type TextProperties } from './interfaces'
 
-const Container = styled.div`
+const Container = styled.div<TextProperties>`
   height: 90vh;
   width: 90vh;
   border: 1px solid #caac75;
   display: flex;
   justify-content: center;
-
-  svg {
-    margin-top: -75vh;
-    margin-left: -75vh;
-    position: absolute;
-  }
 
   img {
     height: 90vh;
@@ -23,21 +17,18 @@ const Container = styled.div`
   }
 
   textarea {
+    font-weight: ${(properties) => (properties.bold ? 700 : 400)};
     background-color: #00000000;
     text-align: center;
-    color: #caac75;
+    color: ${(properties) => properties.color};
     border: none;
     outline: none;
     width: 100%;
     margin: 15px 24px;
     resize: none;
-    font-size: 16px;
+    font-size: ${(properties) => properties.size}px;
   }
 `
-
-interface EditorProperties {
-  imageURL: string
-}
 
 const defaultContent = `
 
@@ -56,13 +47,20 @@ Fraternalmente,
 LUÍS HENRIQUE - Ven∴Mestr∴
 `
 
-const Editor: React.FC<EditorProperties> = (properties) => {
+// https://www.npmjs.com/package/react-image-crop
+// https://www.npmjs.com/package/html-to-image
+
+interface Properties {
+  imageUrl: string
+  textProperties: TextProperties
+}
+
+const View: React.FC<Properties> = (properties) => {
   const [content, setContent] = useState(defaultContent)
 
   return (
-    <Container>
-      <SquareAndCompassesIcon />
-      <img src={properties.imageURL} />
+    <Container {...properties.textProperties}>
+      <img src={properties.imageUrl} />
       <textarea
         value={content}
         onChange={(e) => {
@@ -73,4 +71,4 @@ const Editor: React.FC<EditorProperties> = (properties) => {
   )
 }
 
-export default Editor
+export default View

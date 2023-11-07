@@ -55,7 +55,7 @@ const Selector: React.FC<SelectorProperties> = (properties) => {
   return (
     <Container>
       <SquareAndCompassesIcon />
-      <h1>GOB - Printer</h1>
+      <h1>Criador de cartões</h1>
       <input type="file" placeholder="teste" onChange={handleLoadFile} />
     </Container>
   )
