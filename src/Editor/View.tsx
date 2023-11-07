@@ -5,18 +5,15 @@ import { type TextProperties } from './interfaces'
 const Container = styled.div<TextProperties>`
   height: 90vh;
   width: 90vh;
-  border: 1px solid #caac75;
-  display: flex;
-  justify-content: center;
+  position: relative;
 
   img {
     height: 90vh;
     object-fit: cover;
-    position: absolute;
-    z-index: -1;
   }
 
   textarea {
+    box-sizing: border-box;
     font-weight: ${(properties) => (properties.bold ? 700 : 400)};
     background-color: #00000000;
     text-align: center;
@@ -24,9 +21,15 @@ const Container = styled.div<TextProperties>`
     border: none;
     outline: none;
     width: 100%;
-    margin: 15px 24px;
+    height: 100%;
     resize: none;
+    padding: 16px;
     font-size: ${(properties) => properties.size}px;
+    overflow: hidden;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 `
 
@@ -34,9 +37,6 @@ const defaultContent = `
 
 
 
-
-
-FELIZ ANIVERSÁRIO !
 
 Querido Ir∴{{destinatario}}.
 Em um dia tão especial como este, quero lhe estender o esquadro e o compasso de meus mais sinceros desejos. Que o G∴A∴D∴U∴ continue a iluminar seu caminho, trazendo sabedoria, força e beleza para todos os seus dias.
@@ -57,9 +57,8 @@ interface Properties {
 
 const View: React.FC<Properties> = (properties) => {
   const [content, setContent] = useState(defaultContent)
-
   return (
-    <Container {...properties.textProperties}>
+    <Container {...properties.textProperties} id="card">
       <img src={properties.imageUrl} />
       <textarea
         value={content}

@@ -1,5 +1,8 @@
-import React, { useState } from 'react'
+import download from 'downloadjs'
+import * as htmlToImage from 'html-to-image'
+import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
+import Actions from './Actions'
 import Formatters from './Formatters'
 import View from './View'
 import { type TextProperties } from './interfaces'
@@ -18,9 +21,23 @@ interface Properties {
 const Editor: React.FC<Properties> = (properties) => {
   const [textProperties, setTextProperties] = useState<TextProperties>({
     color: '#caac75',
-    size: 16,
+    size: 22,
     bold: true
   })
+  const [finish, setFinish] = useState(false)
+
+  useEffect(() => {
+    async function downloadCard(): Promise<void> {
+      const card = document.getElementById('card')
+      if (card !== null) {
+        const dataUrl = await htmlToImage.toPng(card)
+        download(dataUrl, 'card.png')
+      }
+    }
+    if (finish) {
+      void downloadCard()
+    }
+  }, [finish])
 
   return (
     <Container>
@@ -29,7 +46,11 @@ const Editor: React.FC<Properties> = (properties) => {
         onChange={setTextProperties}
       />
       <View imageUrl={properties.imageUrl} textProperties={textProperties} />
-      <div style={{ flex: '1' }} />
+      <Actions
+        onFinish={() => {
+          setFinish(true)
+        }}
+      />
     </Container>
   )
 }
