@@ -1,6 +1,6 @@
 import React, { type ChangeEventHandler } from 'react'
 import styled from 'styled-components'
-import { ReactComponent as SquareAndCompassesIcon } from './assets/square-and-compasses.svg'
+import { ReactComponent as LogoIcon } from './assets/logo.svg'
 
 const Container = styled.div`
   display: flex;
@@ -9,6 +9,8 @@ const Container = styled.div`
 
   svg {
     margin-top: -80px;
+    height: 160px;
+    width: 160px;
   }
 
   h1 {
@@ -25,7 +27,7 @@ const Container = styled.div`
     display: flex;
 
     &::before {
-      border: 1px solid #caac75;
+      border: 1px solid #4effbb;
       border-radius: 8px;
       width: 99%;
       content: 'selecione uma imagem de fundo';
@@ -54,7 +56,7 @@ const Selector: React.FC<SelectorProperties> = (properties) => {
 
   return (
     <Container>
-      <SquareAndCompassesIcon />
+      <LogoIcon />
       <h1>Criador de cartões</h1>
       <input type="file" placeholder="teste" onChange={handleLoadFile} />
     </Container>

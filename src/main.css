@@ -4,11 +4,13 @@
   font-family: 'Roboto', sans-serif;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100vh;
 }
 
 body {
-  background-color: #242424;
-  color: #caac75;
+  background-color: #13122d;
+  color: #4effbb;
 }
