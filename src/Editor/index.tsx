@@ -5,7 +5,6 @@ import { styled } from 'styled-components'
 import Actions from './Actions'
 import Formatters from './Formatters'
 import View from './View'
-import { type TextProperties } from './interfaces'
 
 const Container = styled.div`
   height: 100vh;
@@ -19,11 +18,6 @@ interface Properties {
 }
 
 const Editor: React.FC<Properties> = (properties) => {
-  const [textProperties, setTextProperties] = useState<TextProperties>({
-    color: '#caac75',
-    size: 22,
-    bold: true
-  })
   const [finish, setFinish] = useState(false)
 
   useEffect(() => {
@@ -39,13 +33,38 @@ const Editor: React.FC<Properties> = (properties) => {
     }
   }, [finish])
 
+  // useEffect(() => {
+  //   function getTag(
+  //     content: string
+  //   ): [string, string] | [undefined, undefined] {
+  //     const parts = content.split('}}')
+  //     if (parts.length <= 1) {
+  //       return [undefined, undefined]
+  //     }
+  //     const firstParts = parts[0].split('{{')
+  //     if (firstParts.length <= 1) {
+  //       return [undefined, undefined]
+  //     }
+  //     parts.shift()
+  //     return [firstParts[1], parts.join('}}')]
+  //   }
+  //   setTags(() => [])
+  //   if (text.length >= 7) {
+  //     let content: string | undefined = text
+  //     while (content !== undefined) {
+  //       const [tag, remaining] = getTag(content)
+  //       content = remaining
+  //       if (tag !== undefined) {
+  //         setTags([...tags, tag])
+  //       }
+  //     }
+  //   }
+  // }, [text])
+
   return (
     <Container>
-      <Formatters
-        textProperties={textProperties}
-        onChange={setTextProperties}
-      />
-      <View imageUrl={properties.imageUrl} textProperties={textProperties} />
+      <Formatters />
+      <View imageUrl={properties.imageUrl} />
       <Actions
         onFinish={() => {
           setFinish(true)

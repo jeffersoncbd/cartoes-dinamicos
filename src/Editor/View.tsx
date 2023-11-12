@@ -1,14 +1,20 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { type TextProperties } from './interfaces'
+import {
+  editorActions,
+  editorSelects,
+  type TextStyles
+} from '../reducers/editor'
 
-const Container = styled.div<TextProperties>`
+const Container = styled.div<TextStyles>`
   height: 90vh;
   width: 90vh;
   position: relative;
 
   img {
     height: 90vh;
+    width: 90vh;
     object-fit: cover;
   }
 
@@ -33,37 +39,26 @@ const Container = styled.div<TextProperties>`
   }
 `
 
-const defaultContent = `
-
-
-
-
-Querido Ir∴{{destinatario}}.
-Em um dia tão especial como este, quero lhe estender o esquadro e o compasso de meus mais sinceros desejos. Que o G∴A∴D∴U∴ continue a iluminar seu caminho, trazendo sabedoria, força e beleza para todos os seus dias.
-
-São os votos e desejos da Família Alvorada 01
-
-Fraternalmente,
-LUÍS HENRIQUE - Ven∴Mestr∴
-`
-
 // https://www.npmjs.com/package/react-image-crop
 // https://www.npmjs.com/package/html-to-image
 
 interface Properties {
   imageUrl: string
-  textProperties: TextProperties
 }
 
 const View: React.FC<Properties> = (properties) => {
-  const [content, setContent] = useState(defaultContent)
+  const dispatch = useDispatch()
+
+  const text = useSelector(editorSelects.text)
+  const styles = useSelector(editorSelects.styles)
+
   return (
-    <Container {...properties.textProperties} id="card">
+    <Container {...styles} id="card">
       <img src={properties.imageUrl} />
       <textarea
-        value={content}
+        value={text}
         onChange={(e) => {
-          setContent(e.target.value)
+          dispatch(editorActions.updateText(e.target.value))
         }}
       />
     </Container>

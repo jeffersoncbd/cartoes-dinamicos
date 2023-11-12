@@ -1,7 +1,9 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { styled } from 'styled-components'
 import { ReactComponent as BoldIcon } from '../assets/format_bold.svg'
-import { type TextProperties } from './interfaces'
+import { editorActions, editorSelects } from '../reducers/editor'
+import { colors } from '../styleGuide'
 
 const Container = styled.div<{ bold: boolean }>`
   flex: 1;
@@ -11,73 +13,68 @@ const Container = styled.div<{ bold: boolean }>`
   gap: 8px;
 
   svg {
-    border: 1px solid #ddd;
+    border: 1px solid ${colors.lightGreen.main};
     height: 40px;
     width: 40px;
     border-radius: 8px;
     cursor: pointer;
-    background-color: ${(properties) => (properties.bold ? '#ddd' : 'none')};
+    background-color: ${({ bold }) => (bold ? colors.lightGreen.main : 'none')};
 
     &:hover {
-      background-color: ${(properties) => (properties.bold ? '#ddd' : '#aaa')};
+      background-color: ${colors.lightGreen.dark};
 
       & path {
-        fill: black;
+        fill: ${colors.background};
       }
     }
+  }
 
-    & path {
-      fill: ${(properties) => (properties.bold ? 'black' : '#ddd')};
-    }
+  svg path {
+    fill: ${({ bold }) => (bold ? colors.background : colors.lightGreen.main)};
   }
 
   input {
     width: 80px;
     box-sizing: border-box;
     padding: 4px;
-    border: none;
     border-radius: 8px;
     height: 40px;
     text-align: center;
     outline: none;
-    background-color: #ddd;
+    border: 1px solid ${colors.lightGreen.main};
+    color: ${colors.lightGreen.main};
+    font-weight: 700;
+    background-color: ${colors.background};
   }
 `
 
-interface Properties {
-  textProperties: TextProperties
-  onChange: (newValues: TextProperties) => void
-}
+const Formatters: React.FC = () => {
+  const dispatch = useDispatch()
 
-const Formatters: React.FC<Properties> = (properties) => {
+  const styles = useSelector(editorSelects.styles)
+
   return (
-    <Container bold={properties.textProperties.bold}>
+    <Container bold={styles.bold}>
       <BoldIcon
         onClick={() => {
-          properties.onChange({
-            ...properties.textProperties,
-            bold: !properties.textProperties.bold
-          })
+          const bold = !styles.bold
+          dispatch(editorActions.updateTextStyles({ bold }))
         }}
       />
       <input
         type="number"
-        value={properties.textProperties.size}
+        value={styles.size}
         onChange={(e) => {
-          properties.onChange({
-            ...properties.textProperties,
-            size: Number(e.target.value)
-          })
+          const size = Number(e.target.value)
+          dispatch(editorActions.updateTextStyles({ size }))
         }}
       />
       <input
         type="color"
-        value={properties.textProperties.color}
+        value={styles.color}
         onChange={(e) => {
-          properties.onChange({
-            ...properties.textProperties,
-            color: e.target.value
-          })
+          const color = e.target.value
+          dispatch(editorActions.updateTextStyles({ color }))
         }}
       />
     </Container>
