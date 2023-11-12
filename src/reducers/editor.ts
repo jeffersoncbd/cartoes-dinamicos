@@ -27,9 +27,9 @@ interface InitialState {
 const initialState: InitialState = {
   text: '',
   styles: {
-    color: '#caac75',
+    color: '#000',
     size: 22,
-    bold: true
+    bold: false
   },
   fields: {}
 }
