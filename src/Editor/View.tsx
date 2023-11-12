@@ -1,4 +1,6 @@
-import React from 'react'
+import download from 'downloadjs'
+import * as htmlToImage from 'html-to-image'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import {
@@ -6,6 +8,7 @@ import {
   editorSelects,
   type TextStyles
 } from '../reducers/editor'
+import { processText } from '../utils/processText'
 
 const Container = styled.div<TextStyles>`
   height: 90vh;
@@ -43,7 +46,6 @@ const Container = styled.div<TextStyles>`
 `
 
 // https://www.npmjs.com/package/react-image-crop
-// https://www.npmjs.com/package/html-to-image
 
 interface Properties {
   imageUrl: string
@@ -55,6 +57,19 @@ const View: React.FC<Properties> = (properties) => {
   const text = useSelector(editorSelects.text)
   const styles = useSelector(editorSelects.styles)
   const fieldsName = useSelector(editorSelects.fieldsName)
+
+  useEffect(() => {
+    const tags = processText(text)
+    if (tags.length === 0) {
+      const card = document.getElementById('card')
+      if (card !== null) {
+        void htmlToImage.toPng(card).then((dataUrl) => {
+          download(dataUrl, 'card.png')
+          dispatch(editorActions.revertText())
+        })
+      }
+    }
+  }, [text])
 
   return (
     <Container {...styles} id="card">

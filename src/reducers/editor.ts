@@ -4,20 +4,7 @@ import {
   type PayloadAction
 } from '@reduxjs/toolkit'
 import { type RootState } from '../store'
-
-const textExample = `
-
-
-
-
-Querido Ir∴{{destinatario}}.
-Em um dia tão especial como este, quero lhe estender o esquadro e o compasso de meus mais sinceros desejos. Que o G∴A∴D∴U∴ continue a iluminar seu caminho, trazendo sabedoria, força e beleza para todos os seus dias.
-
-São os votos e desejos da Família Alvorada 01
-
-Fraternalmente,
-LUÍS HENRIQUE - Ven∴Mestr∴
-`
+import { processText } from '../utils/processText'
 
 interface UpdateFieldPayload {
   field: string
@@ -31,13 +18,14 @@ export interface TextStyles {
 }
 
 interface InitialState {
+  textBackup?: string
   text: string
   styles: TextStyles
   fields: Record<string, string>
 }
 
 const initialState: InitialState = {
-  text: textExample,
+  text: '',
   styles: {
     color: '#caac75',
     size: 22,
@@ -60,30 +48,7 @@ const editorSlice = createSlice({
       state.fields = {}
     },
     processTheFields(state, _: PayloadAction<void>) {
-      function getTag(
-        content: string
-      ): [string, string] | [undefined, undefined] {
-        const parts = content.split('}}')
-        if (parts.length <= 1) {
-          return [undefined, undefined]
-        }
-        const firstParts = parts[0].split('{{')
-        if (firstParts.length <= 1) {
-          return [undefined, undefined]
-        }
-        parts.shift()
-        return [firstParts[1], parts.join('}}')]
-      }
-
-      const tags: string[] = []
-      let content: string | undefined = state.text
-      while (content !== undefined) {
-        const [tag, remaining] = getTag(content)
-        content = remaining
-        if (tag !== undefined && !tags.includes(tag)) {
-          tags.push(tag)
-        }
-      }
+      const tags = processText(state.text)
       state.fields = {}
       tags.forEach((tag) => {
         state.fields[tag] = ''
@@ -91,6 +56,17 @@ const editorSlice = createSlice({
     },
     updateField(state, action: PayloadAction<UpdateFieldPayload>) {
       state.fields[action.payload.field] = action.payload.value
+    },
+    generateImages(state, _: PayloadAction<void>) {
+      state.textBackup = state.text
+      Object.keys(state.fields).forEach((field) => {
+        state.text = state.text.split(`{{${field}}}`).join(state.fields[field])
+      })
+    },
+    revertText(state, _: PayloadAction<void>) {
+      if (state.textBackup !== undefined) {
+        state.text = state.textBackup
+      }
     }
   }
 })

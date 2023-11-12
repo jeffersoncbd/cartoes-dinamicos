@@ -63,7 +63,9 @@ const Actions: React.FC = () => {
           <Button onClick={() => dispatch(editorActions.clearFields())}>
             Voltar a editar
           </Button>
-          <Button>Gerar imagens</Button>
+          <Button onClick={() => dispatch(editorActions.generateImages())}>
+            Gerar imagens
+          </Button>
         </div>
       </Container>
     )
