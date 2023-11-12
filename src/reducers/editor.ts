@@ -1,4 +1,8 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import {
+  createSelector,
+  createSlice,
+  type PayloadAction
+} from '@reduxjs/toolkit'
 import { type RootState } from '../store'
 
 const textExample = `
@@ -15,6 +19,11 @@ Fraternalmente,
 LUÍS HENRIQUE - Ven∴Mestr∴
 `
 
+interface UpdateFieldPayload {
+  field: string
+  value: string
+}
+
 export interface TextStyles {
   color: string
   size: number
@@ -24,7 +33,7 @@ export interface TextStyles {
 interface InitialState {
   text: string
   styles: TextStyles
-  fields?: string[]
+  fields: Record<string, string>
 }
 
 const initialState: InitialState = {
@@ -33,21 +42,22 @@ const initialState: InitialState = {
     color: '#caac75',
     size: 22,
     bold: true
-  }
+  },
+  fields: {}
 }
 
 const editorSlice = createSlice({
   name: 'editor',
   initialState,
   reducers: {
-    updateText(state, actions: PayloadAction<string>) {
-      state.text = actions.payload
+    updateText(state, action: PayloadAction<string>) {
+      state.text = action.payload
     },
-    updateTextStyles(state, actions: PayloadAction<Partial<TextStyles>>) {
-      state.styles = { ...state.styles, ...actions.payload }
+    updateTextStyles(state, action: PayloadAction<Partial<TextStyles>>) {
+      state.styles = { ...state.styles, ...action.payload }
     },
     clearFields(state, _: PayloadAction<void>) {
-      state.fields = undefined
+      state.fields = {}
     },
     processTheFields(state, _: PayloadAction<void>) {
       function getTag(
@@ -74,8 +84,13 @@ const editorSlice = createSlice({
           tags.push(tag)
         }
       }
-
-      state.fields = tags
+      state.fields = {}
+      tags.forEach((tag) => {
+        state.fields[tag] = ''
+      })
+    },
+    updateField(state, action: PayloadAction<UpdateFieldPayload>) {
+      state.fields[action.payload.field] = action.payload.value
     }
   }
 })
@@ -85,5 +100,9 @@ export const editorActions = editorSlice.actions
 export const editorSelects = {
   text: (state: RootState) => state.editor.text,
   styles: (state: RootState) => state.editor.styles,
-  fields: (state: RootState) => state.editor.fields
+  fields: (state: RootState) => state.editor.fields,
+  fieldsName: createSelector(
+    (state: RootState) => state.editor.fields,
+    (fields) => Object.keys(fields)
+  )
 }

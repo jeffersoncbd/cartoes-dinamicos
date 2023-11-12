@@ -54,14 +54,19 @@ const View: React.FC<Properties> = (properties) => {
 
   const text = useSelector(editorSelects.text)
   const styles = useSelector(editorSelects.styles)
+  const fieldsName = useSelector(editorSelects.fieldsName)
 
   return (
     <Container {...styles} id="card">
       <img src={properties.imageUrl} />
       <textarea
+        disabled={fieldsName.length > 0}
         value={text}
         onChange={(e) => {
-          dispatch(editorActions.updateText(e.target.value))
+          e.preventDefault()
+          if (fieldsName.length === 0) {
+            dispatch(editorActions.updateText(e.target.value))
+          }
         }}
       />
     </Container>

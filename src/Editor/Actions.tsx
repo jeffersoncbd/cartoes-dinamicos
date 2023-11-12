@@ -38,12 +38,26 @@ const Actions: React.FC = () => {
   const dispatch = useDispatch()
 
   const fields = useSelector(editorSelects.fields)
+  const fieldsName = useSelector(editorSelects.fieldsName)
 
-  if (fields !== undefined) {
+  if (fieldsName.length > 0) {
     return (
       <Container>
-        {fields.map((field) => (
-          <input key={field} name={field} placeholder={field} />
+        {fieldsName.map((fieldName) => (
+          <input
+            key={fieldName}
+            name={fieldName}
+            placeholder={fieldName}
+            value={fields[fieldName]}
+            onChange={(e) =>
+              dispatch(
+                editorActions.updateField({
+                  field: fieldName,
+                  value: e.target.value
+                })
+              )
+            }
+          />
         ))}
         <div className="actions">
           <Button onClick={() => dispatch(editorActions.clearFields())}>
