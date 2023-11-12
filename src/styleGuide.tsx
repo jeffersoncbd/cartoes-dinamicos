@@ -5,3 +5,9 @@ export const colors = {
     main: '#4effbb'
   }
 }
+
+export const sizes = {
+  height: '40px',
+  borderRadius: '8px',
+  padding: '16px'
+}

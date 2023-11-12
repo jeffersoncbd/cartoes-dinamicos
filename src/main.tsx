@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import 'react-perfect-scrollbar/dist/css/styles.css'
 import { Provider as ReduxProvider } from 'react-redux'
 import App from './App.tsx'
 import { GlobalStyles } from './GlobalStyles.ts'
