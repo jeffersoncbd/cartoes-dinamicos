@@ -15,8 +15,8 @@ body,
 }
 
 body {
-  background-color: #13122d;
-  color: ${colors.lightGreen};
+  background-color: ${colors.background};
+  color: ${colors.lightGreen.main};
 }
 
 `
