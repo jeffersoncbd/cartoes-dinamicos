@@ -11,11 +11,13 @@ const Container = styled.div<TextStyles>`
   height: 90vh;
   width: 90vh;
   position: relative;
+  margin: 0;
 
   img {
     height: 90vh;
     width: 90vh;
     object-fit: cover;
+    margin: 0;
   }
 
   textarea {
@@ -36,6 +38,7 @@ const Container = styled.div<TextStyles>`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    margin: 0;
   }
 `
 

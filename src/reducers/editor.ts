@@ -24,6 +24,7 @@ export interface TextStyles {
 interface InitialState {
   text: string
   styles: TextStyles
+  fields?: string[]
 }
 
 const initialState: InitialState = {
@@ -44,6 +45,37 @@ const editorSlice = createSlice({
     },
     updateTextStyles(state, actions: PayloadAction<Partial<TextStyles>>) {
       state.styles = { ...state.styles, ...actions.payload }
+    },
+    clearFields(state, _: PayloadAction<void>) {
+      state.fields = undefined
+    },
+    processTheFields(state, _: PayloadAction<void>) {
+      function getTag(
+        content: string
+      ): [string, string] | [undefined, undefined] {
+        const parts = content.split('}}')
+        if (parts.length <= 1) {
+          return [undefined, undefined]
+        }
+        const firstParts = parts[0].split('{{')
+        if (firstParts.length <= 1) {
+          return [undefined, undefined]
+        }
+        parts.shift()
+        return [firstParts[1], parts.join('}}')]
+      }
+
+      const tags: string[] = []
+      let content: string | undefined = state.text
+      while (content !== undefined) {
+        const [tag, remaining] = getTag(content)
+        content = remaining
+        if (tag !== undefined && !tags.includes(tag)) {
+          tags.push(tag)
+        }
+      }
+
+      state.fields = tags
     }
   }
 })
@@ -52,5 +84,6 @@ export const editorReducer = editorSlice.reducer
 export const editorActions = editorSlice.actions
 export const editorSelects = {
   text: (state: RootState) => state.editor.text,
-  styles: (state: RootState) => state.editor.styles
+  styles: (state: RootState) => state.editor.styles,
+  fields: (state: RootState) => state.editor.fields
 }
