@@ -1,8 +1,8 @@
-import React, { type ButtonHTMLAttributes, type ReactNode } from 'react'
+import React, { type ButtonHTMLAttributes } from 'react'
 import { styled } from 'styled-components'
 import { colors } from '../styleGuide'
 
-const Container = styled.button`
+const StyledButton = styled.button`
   height: 40px;
   padding: 0 16px;
   border-radius: 8px;
@@ -21,12 +21,10 @@ const Container = styled.button`
   }
 `
 
-interface Properties extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children?: ReactNode
-}
-
-const Button: React.FC<Properties> = (properties) => {
-  return <Container>{properties.children}</Container>
+const Button: React.FC<ButtonHTMLAttributes<HTMLButtonElement>> = (
+  properties
+) => {
+  return <StyledButton {...properties} />
 }
 
 export default Button
