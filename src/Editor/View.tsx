@@ -60,11 +60,12 @@ const View: React.FC<Properties> = (properties) => {
 
   useEffect(() => {
     const tags = processText(text)
-    if (tags.length === 0) {
+    if (tags.length === 0 && fieldsName.length > 0) {
       const card = document.getElementById('card')
       if (card !== null) {
         void htmlToImage.toPng(card).then((dataUrl) => {
-          download(dataUrl, 'card.png')
+          const date = new Date()
+          download(dataUrl, `cartao_${date.getTime()}.png`)
           dispatch(editorActions.revertText())
         })
       }
