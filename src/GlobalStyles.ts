@@ -6,6 +6,7 @@ export const GlobalStyles = createGlobalStyle`
   margin: 0px;
   padding: 0px;
   font-family: 'Roboto', sans-serif;
+  outline: none !important;
 }
 
 html,
